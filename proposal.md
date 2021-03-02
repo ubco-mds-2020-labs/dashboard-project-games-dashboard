@@ -1,6 +1,6 @@
 # Motivation and Purpose 
 
-**Our role:** Data Scientists/Hired Analysts
+**Our role:** Data Scientists/Hired Analysts  
 **Target audience:** Game developpers, retail platforms (i.e: vendors), entertainers
 
 The video game industry is a very competitive and profitable industry. In 2019, video game revenue was a reported $150.2 billion and is estimated to increase to $179.7 billion in 2020. While the content of the game itself is vital to the success of the game, things such as choosing the right platform of release, which regions to make it accessible to and what genre of game to make are also essential to the success of your game. There are many factors that affect the success of a game, many of which depend and are influenced by what goes on in the development phase. This is increasingly important for small developers with limited resources and even other related industries like streaming or ESports. Knowing which areas of the gaming industry are saturated, popular, or becoming popular will put you in a much better position for success. 
