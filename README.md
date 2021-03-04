@@ -1,5 +1,3 @@
-[![Work in Repl.it](https://classroom.github.com/assets/work-in-replit-14baed9a392b3a25080506f3b7b6d57f295ec2978f6f33ec97e36a161684cbe9.svg)](https://classroom.github.com/online_ide?assignment_repo_id=372398&assignment_repo_type=GroupAssignmentRepo)
-
 This dashboard presents the composition of historical videogame sales from 1980 to 2020, according to their genre (Roleplaying, Strategy, Action, etc.), console (PlayStation, Xbox, PC, etc.) and region (Europe, Asia, North America, etc.). It includes bar charts, scatter plots and violing plots which are all color coded to better convey their message and compare to each other. They are all adjustable to the preferred point of view of the user, including a slider to adjust the visualized date range and dropdown lists to allow the user to filter for the region, platform and genre of interest. (i.e. Nintendo sales between 1990 and 2000 for action games) A list shows the top seller titles for the selected filters, with a summary of their information, and a selector allows the user to show more or less titles on this table.
 
 ![Sketch](AppSketch.jpg)
