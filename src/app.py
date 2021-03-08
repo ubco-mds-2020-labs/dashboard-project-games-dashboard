@@ -20,7 +20,7 @@ sales_data = game_melt.loc[game_melt.Region != "Global_Sales",:]
 sorted_genre_totalsales = list(game.groupby("Genre").sum().sort_values("Global_Sales",ascending=False).index)
 
 #Global Variables (by Aamir)
-regions = {"NA_Sales": "North America", "EU_Sales": "Europe", "JP_Sales": "Japan", "Other_Sales": "Others"}
+regions = {"NA_Sales": "North America", "EU_Sales": "Europe", "JP_Sales": "Japan", "Other_Sales": "Other Regions"}
 
 #Initialize app
 app = dash.Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -102,7 +102,7 @@ content = dbc.Container([
 )
 
 #Putting together Sidebar + Main Body
-app.layout = dbc.Container([sidebar,content])
+app.layout = html.Div([sidebar,content])#dbc.Container([sidebar,content])
 
 #Call back for table
 @app.callback(
