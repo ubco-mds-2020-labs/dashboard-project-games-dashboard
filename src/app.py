@@ -12,7 +12,7 @@ import pandas as pd
 alt.data_transformers.disable_max_rows() #Disable max rows
 
 #Read in data & basic wrangling 
-game = pd.read_csv("../data/vgsales.csv")           # Modified (by Aamir)
+game = pd.read_csv("data/vgsales.csv")           # Modified (by Aamir)
 
 game.Year = game.Year.astype("Int64")
 game_melt = game.melt(id_vars=["Rank", "Name","Platform","Year","Genre","Publisher"], var_name="Region", value_name="Sales").reset_index(drop=True)
