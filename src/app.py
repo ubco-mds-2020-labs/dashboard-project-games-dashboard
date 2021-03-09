@@ -12,11 +12,15 @@ import pandas as pd
 alt.data_transformers.disable_max_rows() #Disable max rows
 
 #Read in data & basic wrangling 
-game = pd.read_csv("data/vgsales.csv")
+game = pd.read_csv("../data/vgsales.csv")           # Modified (by Aamir)
+
 game.Year = game.Year.astype("Int64")
 game_melt = game.melt(id_vars=["Rank", "Name","Platform","Year","Genre","Publisher"], var_name="Region", value_name="Sales").reset_index(drop=True)
 sales_data = game_melt.loc[game_melt.Region != "Global_Sales",:]
 sorted_genre_totalsales = list(game.groupby("Genre").sum().sort_values("Global_Sales",ascending=False).index)
+
+#Global Variables (by Aamir)
+regions = {"NA_Sales": "North America", "EU_Sales": "Europe", "JP_Sales": "Japan", "Other_Sales": "Other Regions"}
 
 #Initialize app
 app = dash.Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -78,13 +82,27 @@ content = dbc.Container([
                 data = sales_data.loc[0:5,].to_dict("records")
             )
         )    
+    ]),
+    dbc.Row([   # Middle graphs (by Aamir)
+        dbc.Col(
+            html.Iframe(
+                id = "releases_graph",
+                style={'border-width': '1', 'width': '450px', 'height': '500px'}
+            )
+        ),
+        dbc.Col(
+            html.Iframe(
+                id = "sales_graph",
+                style={'border-width': '1', 'width': '450px', 'height': '500px'}
+            )
+        )    
     ])
     ],
     style = CONTENT_STYLE
 )
 
 #Putting together Sidebar + Main Body
-app.layout = dbc.Container([sidebar,content])
+app.layout = html.Div([sidebar,content])#dbc.Container([sidebar,content])
 
 #Call back for table
 @app.callback(
@@ -113,7 +131,60 @@ def title_plot(region_filter):
         text="Name").properties(title=region_filter)
     return chart.to_html()
 
-#Call back for Table 
+
+####################################################################################################
+# Aamir Code
+#Call back for Graph Middle 1: Region Releases + Title Name
+@app.callback(
+    Output("releases_graph","srcDoc"), #Output to ID: titles_graph for value:srcDoc
+    Input("region_filter","value"))
+def title_plot(region_filter):
+    #2) Lets look at sales across Genres for each Region
+    #Genres are sorted by decreasing Global Sales (Action is most sales vs Strategy is least)
+    #Notice we see Shooters - while having fewer games released, still sold a lot of copies meaning their titles seemed to do well and the same (to a larger extent) can be said about Platformers.
+    #Looking at the means of each genre, we can see exacly as we noticed above with the mean number of sales in the Shooter/Platform genre now ahead of the rest. 
+    #It is also interesting to see the trend across genres. We see NA, EU and Other sale patters tend to be more similar while JP sale patterns are distinct from the other regions, with a large emphasis on RPG, Platformers. 
+    sales_data = game_melt.loc[game_melt.Region != region_filter,:]
+    sorted_genre_totalsales = list(game.groupby("Genre").sum().sort_values(region_filter,ascending=False).index)
+
+    genre_sales = alt.Chart(sales_data).mark_bar(opacity=0.5).encode(
+        alt.X("Genre",type="nominal",sort=sorted_genre_totalsales),
+        alt.Y("sum(Sales)",title="Total Number of Sales (in millions)",type="quantitative",stack=None)#,
+        #alt.Color("Region",scale=alt.Scale(scheme='set1'),type="nominal"),
+        #alt.Tooltip("Region")
+        )
+    genre_sales = genre_sales+genre_sales.mark_circle()
+
+    genre_plots = (genre_sales).properties(title={"text":["Distribution of Sales in", regions[region_filter]]}).configure_axis(
+                    labelFontSize=12,
+                    titleFontSize=13).configure_title(fontSize = 25,subtitleFontSize=15) 
+    return genre_plots.to_html()
+
+
+
+
+#Call back for Graph Middle 1: Region Releases + Title Name
+@app.callback(
+    Output("sales_graph","srcDoc"), #Output to ID: titles_graph for value:srcDoc
+    Input("region_filter","value"))
+def title_plot(region_filter):
+    #1) Basic Exploratory visualisations of things we noted in the Initial Thoughts
+    #Counts of number of games in each genre, platform and number of games released in each year
+    #Genre and Platform counts are coloured by number of counts and sorted from largest to smallest
+    #Year counts are coloured by year and sorted from largest to smallest 
+    sorted_genre_count = list(game.groupby("Genre").size().sort_values(ascending=False).index)
+    sorted_year_count = list(game.groupby("Year").size().sort_values(ascending=False).index)
+    sorted_platform_count = list(game.groupby("Platform").size().sort_values(ascending=False).index)
+
+    genre_count = alt.Chart(game).mark_bar().encode(
+        alt.X("Genre",type="nominal",sort=sorted_genre_count),
+        alt.Y("count()",title="Number of games",type="quantitative"))
+
+    genre_count = genre_count.properties(title={"text": ["Distribution of Releases in", regions[region_filter]], 
+    }).configure_title(fontSize = 25,subtitleFontSize=15)
+    return genre_count.to_html()
+
+####################################################################################################
 
 
 #Convention
