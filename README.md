@@ -18,4 +18,6 @@ We are students in the Master's of Data Science program at the University of Bri
 ## Contributions
 We are interested in implementing live updates to our table connected to our source's API. If you can help us with this, or generally have any ideas on how we can improve this project, please contact any member of the team.
 
+Click [Here](https://dashboard.heroku.com/apps/game-dashboard-551data) to view our dashboard.
+
 ![Sketch](AppSketch.jpg)
