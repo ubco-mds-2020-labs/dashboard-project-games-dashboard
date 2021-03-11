@@ -1,4 +1,4 @@
-Click [Here](https://dashboard.heroku.com/apps/game-dashboard-551data) to view our dashboard.
+Click [Here](https://game-dashboard-551data.herokuapp.com) to view our dashboard.
 
 ## Motivation
 Videogames are no longer an incipient industry but a well established field of entertainment, but its similarities and differences with other mediums makes them hard to understand people outside of it, including investors, media, and other laypersons. Understanding the underlying information on why the market evolves across time the way it does in different regions, platforms and genre facilitates understanding the mechanics and cultural differences that push this industry forward.
