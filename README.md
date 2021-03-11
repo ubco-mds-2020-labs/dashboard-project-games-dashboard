@@ -1,3 +1,5 @@
+Click [Here](https://dashboard.heroku.com/apps/game-dashboard-551data) to view our dashboard.
+
 ## Motivation
 Videogames are no longer an incipient industry but a well established field of entertainment, but its similarities and differences with other mediums makes them hard to understand people outside of it, including investors, media, and other laypersons. Understanding the underlying information on why the market evolves across time the way it does in different regions, platforms and genre facilitates understanding the mechanics and cultural differences that push this industry forward.
 
@@ -18,6 +20,6 @@ We are students in the Master's of Data Science program at the University of Bri
 ## Contributions
 We are interested in implementing live updates to our table connected to our source's API. If you can help us with this, or generally have any ideas on how we can improve this project, please contact any member of the team.
 
-Click [Here](https://dashboard.heroku.com/apps/game-dashboard-551data) to view our dashboard.
+
 
 ![Sketch](AppSketch.jpg)
