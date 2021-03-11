@@ -31,7 +31,6 @@ app = dash.Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 
 ###Styling
-#
 SIDEBAR_STYLE = {
     "position": "fixed",
     "top": 0,
@@ -46,15 +45,16 @@ SIDEBAR_STYLE = {
 }
 
 CONTENT_STYLE = {
-    "margin-left": "18rem",
+    "margin-left": "16.5rem",
     "margin-right": "2rem",
-    "width":"100%",
-    "padding": "2rem 1rem",
+    "width":"82.5%",
+    "padding": "1rem 1rem",
     "background-color": "#f8f9fa",
 }
 
 ###Cards
 card_graph_tab1 = dbc.Card(
+    [
     dbc.CardBody(
         [
             dbc.Row([html.H4("Number of copies released", className="card-title")]),
@@ -64,9 +64,17 @@ card_graph_tab1 = dbc.Card(
                 id = "region_releases",
                 style={'border-width': '0', 'width': '450px', 'height': '450px'}
             )
+            ]),
+            dbc.Row([
+            html.Iframe(
+                id = "time_sales",
+                style={'border-width': '0', 'width': '1000px', 'height': '450px'}
+            )
             ])
         ]
     ),
+    ],
+    style={"width": "auto"},
 )
 
 card_graph_tab2 = dbc.Card(
@@ -78,6 +86,12 @@ card_graph_tab2 = dbc.Card(
             html.Iframe(
                 id = "region_sales",
                 style={'border-width': '0', 'width': '450px', 'height': '450px'}
+            )
+            ]),
+            dbc.Row([
+            html.Iframe(
+                id = "time_releases",
+                style={'border-width': '0', 'width': '1000px', 'height': '450px'}
             )
             ])
         ]
@@ -192,7 +206,7 @@ tab_selected_style = {
     'borderBottom': '1px solid #d6d6d6',
     'backgroundColor': '#119DFF',
     'color': 'white',
-    'padding': '6px'
+    'padding': '1px'
 }
 #Main Body
 content = html.Div([
@@ -222,13 +236,13 @@ def render_content(tab):
         return html.Div([
                     dbc.Container([
                     dbc.Row([card_graph_tab1])
-                    ])
+                    ],style={'margin-left': '0'})
         ])
     elif tab == 'tab-2':
         return html.Div([
                     dbc.Container([
                     dbc.Row([card_graph_tab2])
-                    ])
+                    ],style={'margin-left': '0'})
         ])
     elif tab == 'tab-3':
         return html.Div([
@@ -238,7 +252,7 @@ def render_content(tab):
                         html.Br(),
                         html.Br(),
                         dbc.Row([card_table])
-                    ])
+                    ],style={'margin-left': '0'})
             ])
 
 #Call back for table
@@ -276,6 +290,23 @@ def title_plot(region_filter):
                     titleFontSize=13).configure_title(fontSize = 25,subtitleFontSize=15) 
     return genre_plots.to_html()
 
+#Call back for Tab 1 - Graph 2: Time sales
+@app.callback(
+    Output("time_sales","srcDoc"), #Output to ID: titles_graph for value:srcDoc
+    Input("region_filter","value"))
+def title_plot(region_filter,max_year=2020):
+    sorted_genre = list(sales_data[sales_data.Region==region_filter].groupby("Genre").sum().sort_values("Sales",ascending=False).index)
+    filtered_set = sales_data[sales_data.Year <= max_year].groupby(["Name","Genre","Region"]).sum().reset_index()[["Name","Genre","Region","Sales"]]
+    chart = alt.Chart(
+    sales_data[sales_data.Region==region_filter],
+    title="Millions of copies sold per year").mark_bar().encode(
+    x=alt.X("Year:O", title="Year"),
+    y=alt.Y("sum(Sales):Q", title="Number of copies sold"),
+    color='Genre:N',
+    tooltip=["Genre:N","sum(Sales):Q"]
+    )
+    return chart.to_html()
+
 #Call back for Tab 2 - Graph 1: Region releases
 @app.callback(
     Output("region_releases","srcDoc"), #Output to ID: titles_graph for value:srcDoc
@@ -297,6 +328,22 @@ def title_plot(region_filter,max_year=2020):
     }).configure_title(fontSize = 25,subtitleFontSize=15)
     return genre_count.to_html()
 
+#Call back for Tab 2 - Graph 2: Time releases
+@app.callback(
+    Output("time_releases","srcDoc"), #Output to ID: titles_graph for value:srcDoc
+    Input("region_filter","value"))
+def title_plot(region_filter,max_year=2020):
+    sorted_genre = list(sales_data[sales_data.Region==region_filter].groupby("Genre").sum().sort_values("Sales",ascending=False).index)
+    filtered_set = sales_data[sales_data.Year <= max_year].groupby(["Name","Genre","Region"]).sum().reset_index()[["Name","Genre","Region","Sales"]]
+    chart = alt.Chart(
+    sales_data[sales_data.Region==region_filter],
+    title="Number of releases per year").mark_bar().encode(
+    x=alt.X("Year:O", title="Year"),
+    y=alt.Y("count(Name):Q", title="Number of copies sold"),
+    color='Genre:N',
+    tooltip=["Genre:N","count(Name):Q"]
+    )
+    return chart.to_html()
 
 #Call back for Tab 3 - Graph 1: Title performance
 @app.callback(
