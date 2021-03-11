@@ -302,7 +302,7 @@ def title_plot(region_filter,max_year=2020):
     title="Millions of copies sold per year").mark_bar().encode(
     x=alt.X("Year:O", title="Year"),
     y=alt.Y("sum(Sales):Q", title="Number of copies sold"),
-    color='Genre:N',
+    color=alt.Color('Genre:N', scale=alt.Scale(scheme='category20')),
     tooltip=["Genre:N","sum(Sales):Q"]
     )
     return chart.to_html()
@@ -340,7 +340,7 @@ def title_plot(region_filter,max_year=2020):
     title="Number of releases per year").mark_bar().encode(
     x=alt.X("Year:O", title="Year"),
     y=alt.Y("count(Name):Q", title="Number of copies sold"),
-    color='Genre:N',
+    color=alt.Color('Genre:N', scale=alt.Scale(scheme='category20')),
     tooltip=["Genre:N","count(Name):Q"]
     )
     return chart.to_html()
