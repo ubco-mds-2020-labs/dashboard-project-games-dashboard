@@ -304,7 +304,7 @@ def render_content(tab):
                                         ]))
                                 ])
                             ])  
-                        ],style={"width":"100%"})
+                        ],width=8)
                         ])
                     ],style={'margin-left': '0'})
                 ])
