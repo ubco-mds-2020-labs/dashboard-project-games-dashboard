@@ -5,6 +5,7 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_table
 from dash.dependencies import Input, Output
+from dash.exceptions import PreventUpdate
 
 #Graphing components
 import altair as alt
@@ -51,6 +52,7 @@ CONTENT_STYLE = {
     "padding": "1rem 1rem",
     "background-color": "#f8f9fa",
 }
+
 
 ###Cards
 card_graph_tab1 = dbc.Card(
@@ -229,8 +231,9 @@ app.layout = html.Div([
 ###Callbacks 
 #
 #Call back for Tabs
-@app.callback(Output('tabs-content', 'children'),
-              Input('tabs', 'value'))
+@app.callback(
+    Output('tabs-content', 'children'),
+    Input('tabs', 'value'))
 def render_content(tab):
     if tab == 'tab-1':
         return html.Div([
@@ -247,13 +250,95 @@ def render_content(tab):
     elif tab == 'tab-3':
         return html.Div([
                     dbc.Container([
-                        html.Br(),
-                        dbc.Row([card_graph_tab3]),
-                        html.Br(),
-                        html.Br(),
-                        dbc.Row([card_table])
+                        dbc.Row([
+                        dbc.Col([
+                                dbc.Card(dbc.CardBody([
+                                    html.H3("Select your view:"),
+                                    dbc.ButtonGroup([
+                                        dbc.Button("Explore",id="exp"),
+                                        dbc.Button("Compare",id="comp")]),
+                                    html.Br(),
+                                    html.P(id="test_output")])
+                                ),
+                                dbc.Card(dbc.CardBody([
+                                    html.H1("Top Game is:"),
+                                    html.P("COD"),
+                                    html.P("# of sales and % of Global")
+                                    ])
+                                ),
+                                dbc.Card(dbc.CardBody([
+                                    html.H1("Top Region is:"),
+                                    html.P("North America"),
+                                    html.P("# of sales and % of Global")
+                                    ])
+                            ),     
+                                dbc.Card(dbc.CardBody([
+                                    html.H1("Top Genre is:"),
+                                    html.P("Fighting"),
+                                    html.P("# of sales and % of Global")
+                                    ])
+                            ),      
+                                dbc.Card(dbc.CardBody([
+                                    html.H1("Top Platform is:"),
+                                    html.P("Wii"),
+                                    html.P("# of sales and % of Global")
+                                    ])
+                            ),    
+                                dbc.Card(dbc.CardBody([
+                                    html.H1("Top Publisher is:"),
+                                    html.P("Nintendo"),
+                                    html.P("# of sales and % of Global")
+                                    ]))
+                        ],width=4),
+                        dbc.Col([
+                            dbc.Row([
+                                dbc.Col([
+                                    dbc.Card(dbc.CardBody([
+                                        html.Iframe(
+                                            id = "time_sales",
+                                            style={'border-width': '0', 'width': '1000px', 'height': '450px'}
+                                        )
+                                        ])),
+                                    dbc.Card(dbc.CardBody([
+                                        html.P("BELOW GRAPH?")
+                                        ]))
+                                ])
+                            ])  
+                        ],style={"width":"100%"})
+                        ])
                     ],style={'margin-left': '0'})
-            ])
+                ])
+
+@app.callback(
+    Output("test_output", "children"),
+    Output("exp", "active"),
+    Output("comp", "active"),
+    Input("exp", "n_clicks"),
+    Input("comp", "n_clicks"))
+def toggle_buttons(n_expl, n_comp):
+    ctx = dash.callback_context
+    if ctx.triggered:
+        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+
+    if ((n_expl is None) & (n_comp is None)):
+        return f"Default to explore", True, False
+    elif button_id == "exp":
+        return f"Explore currently selected", True, False
+    elif button_id == "comp":
+        return f"Compare is selected", False, True
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #Call back for table
 @app.callback(
@@ -404,3 +489,8 @@ def publisher_plot(region_filter,max_year=2020):
 #Convention
 if __name__ == '__main__':
     app.run_server(debug=True, port = 8051)
+
+
+
+
+
